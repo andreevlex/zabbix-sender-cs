@@ -3,8 +3,8 @@ using Newtonsoft.Json;
 
 namespace Zabbix
 {
-    public class SendValue
-    {
+		public class SendValue
+		{
 		[JsonProperty(PropertyName = "host")]
 		public string Host { get; set; }
 
@@ -13,5 +13,5 @@ namespace Zabbix
 
 		[JsonProperty(PropertyName = "value")]
 		public string Value { get; set; }
-    }
+		}
 }

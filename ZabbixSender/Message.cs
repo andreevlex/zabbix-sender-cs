@@ -3,17 +3,17 @@ using Newtonsoft.Json;
 
 namespace Zabbix
 {
-    public class Message
-    {
-        [JsonProperty(PropertyName = "request")]
-        private readonly string request = "sender data"; 
+	public class Message
+	{
+		[JsonProperty(PropertyName = "request")]
+		private readonly string request = "sender data"; 
 
-        [JsonProperty(PropertyName = "data")] 
-        private readonly SendValue[] data;
+		[JsonProperty(PropertyName = "data")] 
+		private readonly SendValue[] data;
 
-        public Message(SendValue sendvalue)
-        {
-            data = new [] { sendvalue };
-        }
-    }
+		public Message(SendValue sendvalue)
+		{
+			data = new [] { sendvalue };
+		}
+	}
 }

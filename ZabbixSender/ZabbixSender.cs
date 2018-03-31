@@ -6,38 +6,38 @@ using System.Threading;
 
 namespace Zabbix
 {
-    public class Sender
-    {
+	public class Sender
+	{
 		private int port;
 		private string server;
-        private readonly string ZBX_HDR = "ZBXD\x01";
-        private readonly int ZBX_HDR_SIZE = 13;
+		private readonly string ZBX_HDR = "ZBXD\x01";
+		private readonly int ZBX_HDR_SIZE = 13;
 		
-        public Sender(string server, int port = 10051)
-        {
-            this.server = server;
-            this.port = port;
-        }
+		public Sender(string server, int port = 10051)
+		{
+			this.server = server;
+			this.port = port;
+		}
 
-        public SenderResponse Send(Message message, int timeout = 500)
-        {
-            var json = JsonConvert.SerializeObject(message);
+		public SenderResponse Send(Message message, int timeout = 500)
+		{
+			var json = JsonConvert.SerializeObject(message);
 			//Console.WriteLine(json);
 
-            byte[] header = Encoding.ASCII.GetBytes(ZBX_HDR);
+			byte[] header = Encoding.ASCII.GetBytes(ZBX_HDR);
 			byte[] length = BitConverter.GetBytes((long)json.Length);
 			byte[] data = Encoding.ASCII.GetBytes(json); 
 
-            byte[] all = new byte[header.Length + length.Length + data.Length];
+			byte[] all = new byte[header.Length + length.Length + data.Length];
 			System.Buffer.BlockCopy(header, 0, all, 0, header.Length);
 			System.Buffer.BlockCopy(length, 0, all, header.Length, length.Length);
 			System.Buffer.BlockCopy(data, 0, all, header.Length + length.Length,
 				data.Length);
 
-            using (var tcp_client = new TcpClient(server, port))
-            {
-                using (var network_stream = tcp_client.GetStream())
-                {
+			using (var tcp_client = new TcpClient(server, port))
+			{
+				using (var network_stream = tcp_client.GetStream())
+				{
 					network_stream.Write(data, 0, data.Length);
 					network_stream.Flush();
 					var counter = 0;
@@ -54,29 +54,29 @@ namespace Zabbix
 						}
 					}
 
-                    // Заголовок
-                    byte[] buffer = new byte[ZBX_HDR_SIZE];
-                    network_stream.Read(buffer, 0, buffer.Length);
+					// Заголовок
+					byte[] buffer = new byte[ZBX_HDR_SIZE];
+					network_stream.Read(buffer, 0, buffer.Length);
 
-                    if( ZBX_HDR != Encoding.ASCII.GetString(buffer, 0, 5) )
-                    {
-                        throw new Exception("Invalid response");
-                    }
+					if( ZBX_HDR != Encoding.ASCII.GetString(buffer, 0, 5) )
+					{
+						throw new Exception("Invalid response");
+					}
 
 					int dataLength = BitConverter.ToInt32(buffer, 5);
 
-                    if (dataLength == 0)
-                    {
-                        throw new Exception("Invalid response");
-                    }
+					if (dataLength == 0)
+					{
+						throw new Exception("Invalid response");
+					}
 
 					var resbytes = new Byte[1024];
-                    network_stream.Read(resbytes, 0, resbytes.Length);
+					network_stream.Read(resbytes, 0, resbytes.Length);
 					var s = Encoding.UTF8.GetString(resbytes);
 					var jsonRes = s.Substring(s.IndexOf('{'));
 					return JsonConvert.DeserializeObject<SenderResponse>(jsonRes);
-                }
-            }
-        }
-    }
+				}
+			}
+		}
+	}
 }
