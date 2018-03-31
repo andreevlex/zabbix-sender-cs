@@ -6,7 +6,7 @@ namespace Zabbix
     public class SendValue
     {
 		[JsonProperty(PropertyName = "host")]
-        public string Host { get; set; }
+		public string Host { get; set; }
 
 		[JsonProperty(PropertyName = "key")]
 		public string Key { get; set; }
