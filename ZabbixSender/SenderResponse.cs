@@ -8,7 +8,7 @@ namespace Zabbix
 		[JsonProperty(PropertyName = "response")]
 		public string Response { get; set; }
 
-		[JsonProperty(PropertyName = "")]
+		[JsonProperty(PropertyName = "info")]
 		public string Info { get; set; }
 		public bool Success { get { return Response == "success"; }}
 	}
