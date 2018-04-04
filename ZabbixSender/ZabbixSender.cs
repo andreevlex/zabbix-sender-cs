@@ -69,10 +69,11 @@ namespace Zabbix
 						throw new Exception("Invalid response");
 					}
 
-					var resbytes = new Byte[1024];
+					var resbytes = new Byte[dataLength];
 					network_stream.Read(resbytes, 0, resbytes.Length);
 					var s = Encoding.UTF8.GetString(resbytes);
 					var jsonRes = s.Substring(s.IndexOf('{'));
+					
 					return JsonConvert.DeserializeObject<SenderResponse>(jsonRes);
 				}
 			}
