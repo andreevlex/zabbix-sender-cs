@@ -13,7 +13,7 @@ namespace Zabbix
 		public string Info { get; set; }
 		public bool Success { get { return Response == "success"; }}
 
-		public double Processed { 
+		public int Processed { 
 			get {
 				return Convert.ToInt32(
 					GetValueFromInfo("processed")
@@ -21,7 +21,7 @@ namespace Zabbix
 			 }
 		}
 
-		public double Failed { 
+		public int Failed { 
 			get {
 				return Convert.ToInt32(
 					GetValueFromInfo("failed")
@@ -29,7 +29,7 @@ namespace Zabbix
 			 }
 		}
 
-		public double Total { 
+		public int Total { 
 			get {
 				return Convert.ToInt32(
 					GetValueFromInfo("total")
