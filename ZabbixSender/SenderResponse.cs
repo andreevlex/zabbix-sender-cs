@@ -40,7 +40,8 @@ namespace Zabbix
 		public double SecondsSpent { 
 			get {
 				return Convert.ToDouble(
-					GetValueFromInfo("seconds_spent")
+					GetValueFromInfo("seconds_spent"),
+					System.Globalization.CultureInfo.InvariantCulture
 				);
 			 }
 		}
