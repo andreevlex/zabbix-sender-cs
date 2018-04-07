@@ -18,8 +18,28 @@ namespace Zabbix
 			this.server = server;
 			this.port = port;
 		}
-
+		
 		public SenderResponse Send(Message message, int timeout = 500)
+		{
+			return SendMessage(message, timeout);
+		}
+
+		public SenderResponse Send(string host, string key, string value, int timeout = 500)
+		{
+			return SendMessage(
+				new Message(
+					new SendValue{ Host = host, Key = key, Value = value }
+					)
+				);
+		}
+
+		public SenderResponse Send(string key, string value)
+		{
+			var host = System.Net.Dns.GetHostName();
+			return Send(host, key, value);
+		}
+
+		private SenderResponse SendMessage(Message message, int timeout = 500)
 		{
 			var json = JsonConvert.SerializeObject(message);
 			var data = Encoding.UTF8.GetBytes(json);
@@ -73,10 +93,12 @@ namespace Zabbix
 					network_stream.Read(resbytes, 0, resbytes.Length);
 					var s = Encoding.UTF8.GetString(resbytes);
 					var jsonRes = s.Substring(s.IndexOf('{'));
+					//System.Console.WriteLine(jsonRes);
 					
 					return JsonConvert.DeserializeObject<SenderResponse>(jsonRes);
 				}
 			}
 		}
+
 	}
 }
